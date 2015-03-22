@@ -1,7 +1,7 @@
 require 'rest_client'
 require 'docverter/json'
-require "docverter/version"
-require "docverter/conversion"
+require 'docverter/version'
+require 'docverter/conversion'
 
 module Docverter
 
@@ -10,8 +10,8 @@ module Docverter
   class APIError < StandardError; end
 
   @@api_key = nil
-  @@base_url = "http://c.docverter.com"
-  
+  @@base_url = 'http://c.docverter.com'
+
   def self.api_key
     @@api_key
   end
@@ -35,7 +35,7 @@ module Docverter
 
   def self.reset
     @@api_key = nil
-    @@base_url = 'https://api.docverter.com/v1'
+    @@base_url = 'http://c.docverter.com'
   end
 
   def self.request(method, url, params={}, headers={})
@@ -45,7 +45,7 @@ module Docverter
 
     headers = {
       :user_agent => "Docverter/v1 RubyBindings/#{Docverter::VERSION}",
-      :content_type => "multipart/form-data"
+      :content_type => 'multipart/form-data'
     }.merge(headers)
 
     opts = {
@@ -93,14 +93,13 @@ module Docverter
   def self.handle_restclient_error(e)
     case e
     when RestClient::ServerBrokeConnection, RestClient::RequestTimeout
-      message = "Could not connect to Docverter (#{@@api_base}).  Please check your internet connection and try again.  If this problem persists, you should let me know at pete@docverter.com."
+      message = "Could not connect to Docverter (#{@@base_url}).  Please check your internet connection and try again.  If this problem persists, you should let me know at pete@docverter.com."
     when SocketError
       message = "Unexpected error communicating when trying to connect to Docverter.  HINT: You may be seeing this message because your DNS is not working.  To check, try running 'host docverter.com' from the command line."
     else
-      message = "Unexpected error communicating with Docverter.  If this problem persists, let me know at pete@docverter.com."
+      message = 'Unexpected error communicating with Docverter.  If this problem persists, let me know at pete@docverter.com.'
     end
     message += "\n\n(Network error: #{e.message})"
     raise APIConnectionError.new(message)
   end
 end
-
